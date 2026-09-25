@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROXBREZERS // Terminal Access</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050811;
+            --card-bg: rgba(15, 23, 42, 0.75);
+            --border: #1e293b;
+            --accent: #00ff66;
+            --accent-glow: rgba(0, 255, 102, 0.25);
+            --red: #ff3344;
+            --text: #f8fafc;
+            --muted: #64748b;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Inter', sans-serif; }
+        
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(0, 255, 102, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(255, 51, 68, 0.08) 0%, transparent 40%);
+        }
+
+        .bio-container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px 24px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Scanline effect */
+        .bio-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: var(--accent);
+            opacity: 0.7;
+            box-shadow: 0 0 10px var(--accent);
+            animation: scan 4s linear infinite;
+        }
+        @keyframes scan { 0% { top: 0%; } 100% { top: 100%; } }
+
+        /* Profile Header */
+        .avatar-box {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        .avatar-frame {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: #0f172a;
+            border: 2px solid var(--accent);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.2rem;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .status-dot {
+            position: absolute;
+            bottom: 4px; right: 4px;
+            width: 14px; height: 14px;
+            background: var(--accent);
+            border: 3px solid var(--bg);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent);
+        }
+
+        .title-group { text-align: center; margin-bottom: 24px; }
+        .title-group h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 800;
+            font-size: 1.6rem;
+            letter-spacing: -0.5px;
+            color: #fff;
+            text-shadow: 0 0 12px rgba(255,255,255,0.2);
+        }
+        .title-group .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--accent);
+            margin-top: 4px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .stat-card .label { font-size: 0.65rem; color: var(--muted); }
+        .stat-card .value { font-size: 0.85rem; color: #fff; font-weight: 700; margin-top: 2px; }
+
+        /* Links Section */
+        .links-container { width: 100%; display: flex; flex-direction: column; gap: 12px; }
+
+        .link-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #0f172a;
+            border: 1px solid var(--border);
+            padding: 14px 18px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .link-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--accent-glow);
+            background: #131d33;
+        }
+
+        .link-info { display: flex; align-items: center; gap: 14px; }
+        .link-icon { font-size: 1.3rem; }
+        .link-text .name { font-weight: 700; font-size: 0.9rem; }
+        .link-text .desc { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+        .link-arrow {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        .footer-tag {
+            margin-top: 26px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--muted);
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bio-container">
+        
+        <!-- Profile Header -->
+        <div class="avatar-box">
+            <div class="avatar-frame">⚡</div>
+            <div class="status-dot"></div>
+        </div>
+
+        <div class="title-group">
+            <h1>ROXBREZERS</h1>
+            <div class="subtitle">CYBER SECURITY & AI DEV</div>
+        </div>
+
+        <!-- Live Cyber Status -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">PRIMARY FOCUS</div>
+                <div class="value" style="color:var(--red)">RED TEAM / PENTEST</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">CORE SYSTEM</div>
+                <div class="value">ROXGBT PLATFORM</div>
+            </div>
+        </div>
+
+        <!-- Links -->
+        <div class="links-container">
+
+            <!-- ROXGBT Platform Link -->
+            <a href="https://roxgbt.github.io/" target="_blank" class="link-card" style="border-color: rgba(0, 255, 102, 0.4);">
+                <div class="link-info">
+                    <div class="link-icon">🛡️</div>
+                    <div class="link-text">
+                        <div class="name" style="color:var(--accent)">ROXGBT AI Platform</div>
+                        <div class="desc">Threat Intelligence & SOC Console</div>
+                    </div>
+                </div>
+                <div class="link-arrow">[RUN]</div>
+            </a>
+
+            <!-- Telegram -->
+            <a href="https://t.me/Hzrox" target="_blank" class="link-card">
+                <div class="link-info">
+                    <div class="link-icon">✈️</div>
+                    <div class="link-text">
+                        <div class="name">Telegram</div>
+                        <div class="desc">@Hzrox</div>
+                    </div>
+                </div>
+                <div class="link-arrow">-></div>
+            </a>
+
+            <!-- WhatsApp -->
+            <a href="https://wa.me/905397141379" target="_blank" class="link-card">
+                <div class="link-info">
+                    <div class="link-icon">💬</div>
+                    <div class="link-text">
+                        <div class="name">WhatsApp Direct</div>
+                        <div class="desc">+90 539 714 13 79</div>
+                    </div>
+                </div>
+                <div class="link-arrow">-></div>
+            </a>
+
+            <!-- Discord -->
+            <div class="link-card" onclick="navigator.clipboard.writeText('hazretirox'); alert('Discord kullanıcı adı kopyalandı: hazretirox');" style="cursor:pointer;">
+                <div class="link-info">
+                    <div class="link-icon">👾</div>
+                    <div class="link-text">
+                        <div class="name">Discord</div>
+                        <div class="desc">hazretirox (Tıkla Kopyala)</div>
+                    </div>
+                </div>
+                <div class="link-arrow">[COPY]</div>
+            </div>
+
+        </div>
+
+        <div class="footer-tag">
+            [ SYSTEM ID: ROXBREZERS-SEC-2026 ]
+        </div>
+
+    </div>
+
+</body>
+</html>
